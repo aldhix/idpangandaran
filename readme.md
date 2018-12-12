@@ -7,5 +7,5 @@ Id Pangandaran adalah sebuah website tipe newspaper, yang dimiliki oleh idpangan
 - JQuery
 - Bootstrap 4
 - Vuejs 2.0
-- Vuelatide
+- Vuelidate
 - sortable
