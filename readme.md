@@ -2,8 +2,7 @@
 
 Id Pangandaran adalah sebuah website tipe newspaper, yang dimiliki oleh idpangandaran.
 
-
-##Framework yang digunakan
+## Framework yang digunakan
 - Laravel
 - JQuery
 - Bootstrap 4
