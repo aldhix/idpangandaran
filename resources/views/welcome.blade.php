@@ -8,7 +8,7 @@
     <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
     <!-- Title -->
-    <title>The News Paper - News &amp; Lifestyle Magazine Template</title>
+    <title>ID Pangandaran | @yield('title')</title>
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{url('themes/img/core-img/favicon.png')}}" />
