@@ -1,0 +1,89 @@
+.header-area .top-header-area .top-header-content,
+.header-area .top-header-area,
+.hero-area .breaking-news-area .news-title,
+.section-heading h6,
+#scrollUp,
+.newsletter-widget form button
+{
+    background-color: #008aff;
+}
+
+.single-blog-post .post-data .post-catagory,
+.single-blog-post.featured-post .post-data .post-author a,
+.popular-news-widget h3,
+.popular-news-widget .single-popular-post h6 span,
+.single-blog-post .post-data .post-title h6:hover,
+.single-blog-post .post-data .post-title h6:focus,
+.single-blog-post .post-data .post-meta .post-like span:hover,
+.single-blog-post .post-data .post-meta .post-like span:focus
+.single-blog-post .post-data .post-meta .post-comment span:hover,
+.single-blog-post .post-data .post-meta .post-comment span:focus,
+.single-blog-post.featured-post.single-post .post-data .related--post:hover, 
+.single-blog-post.featured-post.single-post .post-data .related--post:focus,
+.newspaper-tags ul li a:hover, .newspaper-tags ul li a:focus,
+.popular-news-widget .single-popular-post h6:hover, 
+.popular-news-widget .single-popular-post h6:focus,
+.latest-comments-widget .single-comments .comments-text a:hover, 
+.latest-comments-widget .single-comments .comments-text a:focus,
+.newsletter-widget form button:hover, .newsletter-widget form button:focus,
+.newsletter-widget h4,
+.newsletter-widget form button:hover, .newsletter-widget form button:focus,
+.hero-area .breaking-news-area .ticker ul li a:hover,
+.hero-area .breaking-news-area .ticker ul li a:focus
+{
+    color: #008aff;
+}
+.nav-item {
+    padding-top:5px;
+    padding-bottom: 5px; 
+    padding-right:20px; 
+}
+
+.nav-top{
+    background-color: #2747a1;
+    
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .header-area .top-header-area .top-header-content,
+    .header-area .top-header-area{
+        background-color: #2747a1;
+    }
+  .header-area .newspaper-main-menu {
+    background-color: #008aff; } 
+}
+
+@media only screen and (max-width: 767px) {
+    .header-area .top-header-area .top-header-content,
+    .header-area .top-header-area{
+        background-color: #2747a1;
+    }
+
+  .header-area .newspaper-main-menu {
+    background-color: #008aff;
+    height: 70px; } 
+}
+
+@media only screen and (min-width: 768px) and (max-width: 991px) {
+    .header-area .top-header-area .top-header-content,
+    .header-area .top-header-area{
+        background-color: #2747a1;
+    }
+  .header-area .is-sticky #stickyMenu {
+    background-color: #008aff; } 
+
+}
+@media only screen and (max-width: 767px) {
+.header-area .top-header-area .top-header-content,
+.header-area .top-header-area{
+    background-color: #2747a1;
+}
+
+.header-area .is-sticky #stickyMenu {
+background-color: #008aff; } 
+}
+
+
+.classy-navbar-toggler .navbarToggler span{
+    background-color: #fff;
+}
