@@ -8,100 +8,97 @@
 @section('content')
 <div id="app">
 	
-<h1>Menu</h1>
+<h1><i class="fas fa-sitemap"></i> Menu</h1>
 <hr>
 <div class="row mb-3">
+	<!-- Col -->
 	<div class="col-md-6 mt-3">
 		<div class="card">
-			<div class="card-header"><i class="fas fa-link">Add Menu</i></div>
+			<div class="card-header">Add Menu</div>
 			<div class="card-body">
-				<div class="alert alert-success alert-dismissible" style="display:none;" role="alert" v-show="success">
-				  <strong>Saved Successfully!</strong> Data has been successfully saved.
-				  <button type="button" class="close" v-on:click="success = false">
-				    <span aria-hidden="true">&times;</span>
-				  </button>
-				</div>
+				<!-- ================ Nama Menu ===================== -->
 				<div class="form-group form-label-group">
-					<input type="text" id="inputNama" 
-					class="form-control" 
-					v-bind:class="{'is-invalid': $v.nama.$invalid || errors.nama,'is-valid':!$v.nama.$invalid}" 
-					placeholder="Menu" autofocus 
+
+					<input type="text" id="iNama" placeholder="Menu" class="form-control" 
 					v-model.trim="nama"
-					v-on:keyup="delete errors.nama">
+					:class="{'is-invalid':$v.nama.$invalid }">
 
-					<label for="inputNama">Nama Menu</label>
-					
+					<label for="iNama">Menu</label>
+
 					<div class="invalid-feedback" 
-					v-if="!$v.nama.required">Field is required.</div>
-			 		<div class="invalid-feedback" v-if="!$v.nama.minLength">Name must have at least @{{$v.nama.$params.minLength.min}} letters.</div>
-			 		<div class="invalid-feedback" v-if="errors.nama">@{{errors.nama[0]}}</div>
+					v-show="!$v.nama.required">Field is required.</div>
 
-			 		<div class="form-text text-muted"><small>Contoh : Travel</small></div>
+					<div class="invalid-feedback" 
+					v-show="!$v.nama.minLength">
+					Field min @{{$v.nama.$params.minLength.min}} Letter</div>
+
 				</div>
-
+				<!-- ================ /Nama Menu ===================== -->
+				<!-- ================ URL ===================== -->
 				<div class="form-group form-label-group">
-					<input type="text" id="inputUrl" class="form-control"
-					v-bind:class="{'is-invalid': $v.url.$invalid || errors.url,'is-valid':!$v.url.$invalid}" 
-					placeholder="URL" 
-					v-model.trim="url"
-					v-on:keyup="delete errors.url">
+					<input type="text" id="iUrl" placeholder="URL" class="form-control"
+					v-model.trim="url">
 
-					<label for="inputUrl">URL</label>
-
-					<div class="invalid-feedback" v-if="!$v.url.required">Field is required.</div>
-			 		<div class="invalid-feedback" v-if="!$v.url.minLength">URL must valid.</div>
-			 		<div class="invalid-feedback" v-if="errors.url">@{{errors.url[0]}}</div>
-			 		<div class="form-text text-muted">
-			 		<small>Contoh : http://domain.com/category</small></div>
+					<label for="iUrl">URL</label>
 				</div>
-				<div class="form-group">
-					<div class="form-check form-check-inline">
-					  <input type="radio" id="one" class="form-check-input" v-model="type" value="1">
-					  <label class="form-check-label" for="one">Menu Top</label>
-					</div>
-					<div class="form-check form-check-inline">
-					  <input type="radio" id="two" class="form-check-input" v-model="type" value="2">
-					  <label class="form-check-label" for="two">Menu Secondary</label>
-					</div>
-				</div>
+				<!-- ================ / URL ===================== -->
 			</div>
 			<div class="card-footer">
-				
-				<button type="button" class="btn" 
-				:class=" !$v.$invalid && isEmpty(errors)? 'btn-primary': 'btn-secondary' "
-				:disabled="$v.$invalid || !isEmpty(errors)"
-				v-on:click="submit">Simpan</button>
+				<button class="btn btn-primary" type="button"
+				v-on:click="simpan"
+				:disabled="$v.$invalid">@{{typeButton}}</button>
+
+				<button class="btn btn-dark" type="button"
+				v-on:click="batal"
+				v-show="typeButton == 'Update' ">Batal</button>
 
 				<img src="{{url('images/loading.gif')}}" v-show="loader" />
 			</div>
 		</div>
+
+		<!-- ================ / List Domain ===================== -->
+		<table class="table mt-3">
+			<tr><th>#</th><th>Domain</th><th></th></tr>
+			@foreach(
+				\App\Domain::orderBy('id','asc')->get() as $r
+			)
+			<tr>
+				<td>{{$r->id}}</td>
+				<td>{{$r->domain}}</td>
+				<td>
+					<a href="{{route('admin.menu.second',['id'=>$r->id])}}" 
+					class="btn btn-sm btn-success">
+						Menu 2nd
+					</a>
+				</td>
+			</tr>
+			@endforeach
+		</table>
 	</div>
+	<!-- / Col -->
+	<!-- Col -->
 	<div class="col-md-6 mt-3">
+
+<!-- ==================================== Menu List ==================================== -->
 		<h4>Menu Top</h4>
 		<ol class='list-menu border border-secondary' style="display:none" v-show="true">
-		  <li :data-id="`${item.id}`" v-for="item in menus" 
+		  <li :data-id="`${item.id}`" v-for="item in datas" 
 		  class="border border-info bg-info text-white">
 		  	<i class="cursor fas fa-arrows-alt"></i> 
 		  	<a href="" target="_blank" :href="`${item.url_menu}`">
 		  	<span>@{{item.nama_menu}}</span>
 		  	</a>
 		  	<i class="fas fa-trash right float-right" v-on:click="hapus"></i>
+		  	<i class="fas fa-edit right float-right mr-2" v-on:click="edit"></i>
 		  </li>
 		</ol>
-		<h4 class="mt-3">Menu Secondary</h4>
-		<ol class='list-menu border border-secondary' style="display:none" v-show="true">
-		  <li :data-id="`${item.id}`" v-for="item in menus2" 
-		  class="border border-info bg-info text-white">
-		  	<i class="cursor fas fa-arrows-alt"></i> 
-		  	<a href="" target="_blank" :href="`${item.url_menu}`">
-		  	<span>@{{item.nama_menu}}</span>
-		  	</a>
-		  	<i class="fas fa-trash right float-right" v-on:click="hapus"></i> 
-		  </li>
-		</ol>
+<!-- ====================================  / Menu List ==================================== -->
 	</div>
+	<!-- / Col -->
+
 </div>
 
+<!-- ==================================== Modal Hapus ==================================== -->
 <div class="modal fade m-hapus" tabindex="-1" role="dialog">
   <div class="modal-dialog modal-sm">
     <div class="modal-content">
@@ -121,12 +118,17 @@
     </div>
   </div>
 </div>
-
+<!-- ====================================  / Modal Hapus ==================================== -->
 </div> <!-- End App -->
 @endsection
 
 @push('css')
 <style type="text/css">
+
+li .fas.right {
+	cursor: pointer;
+}
+
 body.dragging, body.dragging * {
   cursor: move !important;
 }
@@ -169,23 +171,33 @@ ol.list-menu .cursor{
 ol.list-menu li a{
 	color: #fff;
 }
+
 </style>
 @endpush
 
 @push('js')
-<script type="text/javascript" src="{{url('js/vue.min.js')}}"></script>
-<script type="text/javascript" src="{{url('js/axios.min.js')}}"></script>
-<script type="text/javascript" src="{{url('js/vuelidate.min.js')}}"></script>
-<script type="text/javascript" src="{{url('js/validators.min.js')}}"></script>
-<script type="text/javascript" src="{{url('js/jquery-sortable.js')}}"></script>
+<?php 
+$jscssadmin = new \App\Libs\JsCssAdmin;
+$js = $jscssadmin->js('Vue.js v2.5.17')
+	 .$jscssadmin->js('axios v0.18.0')
+	 .$jscssadmin->js('vuelidate.min')
+	 .$jscssadmin->js('validators.min')
+	 .$jscssadmin->js('jquery-sortable.js v0.9.13');
+echo $js;
+ ?>
 <script type="text/javascript">
 <?php
-$data = App\Menu::select('id','nama_menu','url_menu','type_menu')
-		->orderBy('sort_menu','asc')->where('type_menu',1)->get();
-
-$data2 = App\Menu::select('id','nama_menu','url_menu','type_menu')
-		->orderBy('sort_menu','asc')->where('type_menu',2)->get();
+$data = App\Menu::select('id','nama_menu','url_menu')
+		->orderBy('sort_menu','asc')
+		->where('id_domain',1)
+		->where('type_menu',1)->get();
 ?>
+
+var urlSimpan = "{{route('admin.menu.simpan')}}";
+var urlEdit = "{{route('admin.menu.edit')}}";
+var urlHapus = "{{route('admin.menu.hapus')}}";
+var type_menu = 1;
+var iddomain = 1;
 
 Vue.use(window.vuelidate.default)
 const { required, minLength } = window.validators ;
@@ -195,85 +207,84 @@ var app = new Vue({
   data: {
     nama : '',
     url : '',
-    type:1,
     loader:false,
-    errors : {},
-    success : false,
-    menus: <?= json_encode($data)?>,
-    menus2: <?= json_encode($data2)?>,
-    selector:null,
+    typeButton : 'Simpan',
+	index : 0,
+    datas: <?= json_encode($data)?>,
   },
   validations: {
   	nama: {
     	required,
     	minLength: minLength(4)
-    },
-    url : {
-    	required,
-    	minLength: minLength(10)
     }
   },
   methods : {  
-  	submit : function(event){
-  		var button = $(event.target);
-  		this.allDisabled(button);
-  		var reqURL = "{{route('admin.menu.simpan')}}";
-  		axios.post(reqURL,{nama:this.nama, url:this.url, type:this.type}).then(res => {
-  			this.allEnabled(button);
-  			if(res.data.status === 1){
-  				var resdata = {
-  						nama_menu:res.data.data.nama_menu,
-  						url_menu:res.data.data.url_menu,
-  						id:res.data.data.id,
-  				}
-  				if (res.data.data.type_menu == 1){
-  					this.menus.push(resdata);
-  				} else {
-  					this.menus2.push(resdata);
-  				}
-  				this.nama = '';
-  				this.url = '';
-  				this.success = true;
-  				//console.log(res);
-  			} else if ( res.data.status === 0) {
-  				this.errors = res.data.errors;
-  			}
-  		});
-  	},
-  	allDisabled : function(selector){
+  	simpan : function(event){
   		this.loader = true;
-  		$('#inputNama').attr('disabled',true);
-  		$('#inputUrl').attr('disabled',true);
-  		selector.removeClass('btn-primary').addClass('btn-secondary');
-  		$('.card-footer button').attr('disabled',true)
-  	},
-  	allEnabled : function(selector){
-  		this.loader = false;
-  		$('#inputNama').attr('disabled',false);
-  		$('#inputUrl').attr('disabled',false);
-  		selector.removeClass('btn-secondary').addClass('btn-primary');
-  		$('.card-footer button').attr('disabled',false)
-  	},
-  	isEmpty : function (obj){
-	  		for(var key in obj) {
-	        if(obj.hasOwnProperty(key))
-	            return false;
-	    }
-	    return true;
-  	},
-  	hapus : function (event){
-  		this.selector = $(event.target).parent('li');
-  		$('.m-hapus').modal('show');
-  	},
-  	yes : function (){
-		var iddata = this.selector.attr('data-id');
-		var reqURL = "{{route('admin.menu.hapus')}}";
-  		axios.post(reqURL,{id:iddata});
-  		this.selector.remove();
-  		this.selector = null;
-		$('.m-hapus').modal('hide');
-	},
+		$('#app input, #app .card-footer button').attr('disabled',true);
 
+		/* Simpan */
+		if(this.typeButton == 'Simpan'){
+			axios.post(urlSimpan, {
+				nama:this.nama, 
+				url:this.url ,
+				type : type_menu, 
+				iddomain : iddomain
+			})
+			.then(res => {
+				if(res.data.status === 1) {
+					this.datas.push(res.data.data);	
+					this.clear();
+				}
+
+				console.log(res);
+			});
+			
+		}
+
+		/* Update */
+		if(this.typeButton == 'Update'){
+			var iddata = this.datas[this.index].id;
+			axios.post(urlEdit, {id : iddata, nama : this.nama, url : this.url })
+			.then(res => {
+				this.datas[this.index].nama_menu = this.nama;
+				this.datas[this.index].url_menu = this.url;
+				this.clear();
+			});				
+		}
+  	},
+  	edit : function (event){
+		this.typeButton = 'Update';
+		this.getId(event);
+		this.nama= this.datas[this.index].nama_menu;
+		this.url= this.datas[this.index].url_menu;
+	},
+  	hapus : function(event){
+  		this.clear();
+		this.getId(event);
+		$('.m-hapus').modal('show');
+  	},
+  	yes : function(event){
+  		var iddata = this.datas[this.index].id;
+		axios.post(urlHapus, {id :iddata });
+		$('.m-hapus').modal('hide');
+		this.datas.splice(this.index, 1);
+  	},
+  	batal : function (){
+		this.clear();
+	},
+	clear : function (){
+		this.nama = '';
+		this.url = '';
+		this.loader = false;
+		this.typeButton = 'Simpan';
+		$('#app input, #app .card-footer .btn-dark').attr('disabled', false);
+	},
+  	getId : function(event){
+		var iddata = $(event.target).parents('li').attr('data-id');
+		this.index = this.datas.indexOf( this.datas.find(i => i.id == iddata) );
+	}
+  	
   }
 });
 
@@ -284,13 +295,11 @@ $(function  () {
 	  onDrop: function ($item, container, _super) {
 	    var data = group.sortable("serialize").get();
 	    var reqURL = "{{route('admin.menu.sort')}}";    
-	    axios.post(reqURL, { data : data[0], data2 : data[1] } )
+	    axios.post(reqURL, { data : data[0], type : type_menu, iddomain : iddomain } )
 	    .catch(function (error) {
 		    alert('Error');
 		    console.log(error);
 		 });
-	    // var jsonString = JSON.stringify(data[0], null, ' ');
-	    // $('#serialize_output2').text(jsonString);
 	    _super($item, container);
 	  }
 

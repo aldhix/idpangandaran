@@ -5,40 +5,39 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use File;
 use Response;
+use App\Photo;
+use Image;
+use Auth;
 
 class PhotoController extends Controller
 {
-    public function photo(Request $req)
+    public function upload(Request $req)
     {
-    	$path = storage_path('app/images/'.$req->username.'/'.$req->file_name);
+        $file = $req->file('file');
+        $filename = md5(Auth::user()->id).'_'.time().'.'.$file->getClientOriginalExtension();
+        
+        $img = Image::make($file);
+        $img->fit(810,512);
+        $img->save('images/photos/'.$filename,60);
 
-        if (!File::exists($path)) {
-            abort(404);
-        }
+        $img_thumbs = Image::make($file);
+        $img_thumbs->fit('150');
+        $img_thumbs->save('images/photos/thumbs/thumb_'.$filename);
 
-        $file = File::get($path);
-        $type = File::mimeType($path);
+        $img_origins = Image::make($file);
+        $img_origins->save('images/photos/origins/ori_'.$filename,60);
 
-        $response = Response::make($file, 200);
-        $response->header("Content-Type", $type);
+        $result = Photo::create([
+                'filename'=>$filename,
+        ]);
 
-        return $response;
+        $data = Photo::select('filename')->orderBy('id','desc')->paginate(10);
+        return response()->json(['status'=>1,'data'=>$data]);
     }
 
-    public function thumb(Request $req)
+    public function data(Request $req)
     {
-    	$path = storage_path('app/images/'.$req->username.'/thumb_'.$req->file_name);
-
-        if (!File::exists($path)) {
-            abort(404);
-        }
-
-        $file = File::get($path);
-        $type = File::mimeType($path);
-
-        $response = Response::make($file, 200);
-        $response->header("Content-Type", $type);
-
-        return $response;
+        return Photo::select('filename')->orderBy('id','desc')->paginate(10);
     }
+    
 }

@@ -6,13 +6,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>IDPangandaran Admin - @yield('title')</title>
-    <!-- Bootstrap core CSS-->
-    <link href="{{url('vendor/bootstrap/css/bootstrap.min.css')}}" rel="stylesheet">
-    <!-- Custom fonts for this template-->
-   <link href="{{url('vendor/fontawesome-free/css/all.min.css')}}" rel="stylesheet" type="text/css">
-    <!-- Custom styles for this template-->
-    <link href="{{url('css/sb-admin.css')}}" rel="stylesheet">
+    <title>ID Pangandaran Admin - @yield('title')</title>
+    <?php 
+    $jscssadmin = new \App\Libs\JsCssAdmin;
+    $css = $jscssadmin->css('Bootstrap v4.1.3')
+          .$jscssadmin->css('Font Awesome 5.3.1')
+          .$jscssadmin->css('SB Admin v5.0.2');
+     echo $css;
+     ?>
     @stack('css')
   </head>
   <body id="page-top">
@@ -57,14 +58,12 @@
       <i class="fas fa-angle-up"></i>
     </a>
     @include('layouts.main.modal-delete')
-     <!-- Bootstrap core JavaScript-->
-    <script src="{{url('vendor/jquery/jquery.min.js')}}"></script>
-    <script src="{{url('vendor/bootstrap/js/bootstrap.bundle.min.js')}}"></script>
-    <!-- Core plugin JavaScript-->
- <!--    <script src="{{url('vendor/jquery-easing/jquery.easing.min.js')}}"></script>
- -->
-    <!-- Custom scripts for all pages-->
-    <script src="{{url('js/sb-admin.min.js')}}"></script>
+    <?php 
+    $js = $jscssadmin->js('jQuery v3.3.1')
+          .$jscssadmin->js('Bootstrap v4.1.3')
+          .$jscssadmin->js('SB Admin v5.0.2');
+    echo $js;
+    ?>
     @stack('js')
 
   </body>

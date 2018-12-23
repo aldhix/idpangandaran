@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Menu;
+use App\Domain;
 
 class MenuController extends Controller
 {
@@ -13,30 +14,39 @@ class MenuController extends Controller
     	return view('pages.menu.index');
     }
 
+    public function second($id)
+    {
+        $data = Domain::where('id',$id)->first();
+        return view('pages.menu.second',['domain'=>$data]);
+    }
+
     function simpan(Request $req){
-        $type = $req->type != 2 ? 1:2;
-    	$valid = Validator::make($req->all(), [
+    	
+        $valid = Validator::make($req->all(), [
             'nama'=>'required|min:4',
-            'url'=>'required|min:10'
         ]);
 
         if($valid->fails()){
             return response()->json(['status'=>0,'errors'=>$valid->errors()]);
         }
 
-        $jum = Menu::get()->count();
+        $jum = Menu::where('id_domain',$req->iddomain)->get()->count();
 
     	$result = Menu::create([
                 'nama_menu'=>$req->nama, 
                 'url_menu'=>$req->url, 
-                'type_menu'=>$type,
-                'sort_menu'=>$jum,    
+                'type_menu'=>$req->type,
+                'sort_menu'=>$jum, 
+                'id_domain'=>$req->iddomain,   
         ]);
 
         if($result){
      		$data = Menu::where('nama_menu',$req->nama)
+                    ->where('id_domain',$req->iddomain)
+                    ->where('type_menu',$req->type)
      				->where('url_menu',$req->url)
-     				->select('id','nama_menu','url_menu','type_menu')->first();   	
+     				->select('id','nama_menu','url_menu')
+                    ->orderBy('id','desc')->first();   	
         	return [
 				'status'=>1,
 				'data'=> $data,
@@ -48,20 +58,40 @@ class MenuController extends Controller
         }
     }
 
+    function edit(Request $req){
+        
+        $valid = Validator::make($req->all(), [
+            'nama'=>'required|min:4',
+        ]);
+
+        if($valid->fails()){
+            return response()->json(['status'=>0,'errors'=>$valid->errors()]);
+        }
+
+        $result = Menu::where('id',$req->id)
+        ->update([
+                'nama_menu'=>$req->nama, 
+                'url_menu'=>$req->url, 
+        ]);
+
+        if($result){
+            return [  'status'=>1 ];
+        } else {
+            return [ 'status'=>0 ];
+        }
+    }
+
     public function sort(Request $req)
     {
         if($req->data != ''){
             $sort = 0;
             foreach($req->data as $x){
-                Menu::where('id',$x['id'])->update(['sort_menu'=>$sort,'type_menu'=>1]);
-                $sort++;
-            }
-        }
-
-        if($req->data2 != ''){
-            $sort = 0;
-            foreach($req->data2 as $x){
-                Menu::where('id',$x['id'])->update(['sort_menu'=>$sort,'type_menu'=>2]);
+                Menu::where('id',$x['id'])
+                ->update([
+                    'sort_menu'=>$sort,
+                    'type_menu'=>$req->type,
+                    'id_domain'=>$req->iddomain,
+                    ]);
                 $sort++;
             }
         }
