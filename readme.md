@@ -8,6 +8,7 @@ Id Pangandaran adalah sebuah situs portal tipe newspaper, yang dimiliki oleh [id
 - JQuery
 - Bootstrap 4
 - Vuejs 2.0
+- Axios
 - Vuelidate
 - sortable
 - Ckeditor 4
