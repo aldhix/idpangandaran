@@ -1,6 +1,7 @@
-## About ID Pangandaran
+![Logo ID Pangandaran] (https://idpangandaran.com/themes/img/core-img/logo.png)
 
-Id Pangandaran adalah sebuah situs porta tipe newspaper, yang dimiliki oleh idpangandaran.
+## About ID Pangandaran
+Id Pangandaran adalah sebuah situs porta tipe newspaper, yang dimiliki oleh [idpangandaran](https://idpangandaran.com).
 
 ## Framework yang digunakan
 - Laravel
